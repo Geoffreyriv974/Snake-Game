@@ -1,15 +1,26 @@
 import tkinter as tk
 import random
-from io import text_encoding
+import mysql.connector
 
 WIDTH = 500
 HEIGHT = 500
 PIECE_SIZE = 20
 BASE_SNAKE_LENGTH = 2
 
+connection = mysql.connector.connect(
+    host="localhost",
+    port=3306,
+    user='root',
+    password='root',
+    database='score'
+)
+
+
+def save_score():
+    root.destroy()
 
 def game():
-    global food, snake_piece, direction, score
+    global food, snake_piece, direction, score, root
 
     snake_piece = []
     direction = "Right"
@@ -96,7 +107,54 @@ def game():
         root.destroy()
         game()
 
+    def entry_name():
+        global name_player_label
+        def replace_entry(event):
+            if name_player.get() == "Entrez votre pseudo...":
+                name_player.delete(0, "end")
+
+        btn_restart.destroy()
+        btn_save_score.destroy()
+
+        def confirme_entry():
+            global name_player_get, btn_save, new_score
+
+            name_player_label.config(text=name_player.get())
+
+            name_player_get = name_player.get()
+
+            btn_save_score = tk.Button(root, bg="blue", fg="white", text="Sauvegardé", font=("Arial, 15"),cursor="hand2", command=save_score)
+            btn_save_score.pack()
+
+            btn_valid_entry.destroy()
+            name_player.destroy()
+
+            appel_score = tk.IntVar()
+            appel_score.set(score)
+            appel_score_get = str(appel_score.get())
+
+            display_score = tk.Label(root, text="Ton Score :", bg="white", fg="black", font=("yellowstone", 20))
+            display_score.pack(side=tk.LEFT)
+
+            display_score_number = tk.Label(root, text=appel_score_get, bg="white", fg="black",font=("yellowstone", 20))
+            display_score_number.pack(side=tk.RIGHT)
+
+            new_score = display_score_number.cget("text")
+
+        name_player = tk.Entry(root, font=("yellowstone", 20), borderwidth=4, fg="gray", bg="white")
+        name_player.pack(pady=10)
+        name_player.insert(0, "Entrez votre pseudo...")
+        name_player.bind("<FocusIn>", replace_entry)
+
+        btn_valid_entry = tk.Button(root, command=confirme_entry, relief="flat", borderwidth=0, text="Valider", bg="green", fg="white", font=("yellowstone", 15))
+        btn_valid_entry.pack(pady=10)
+
+        name_player_label = tk.Label(root, font=("yellowstone", 20), borderwidth=4, fg="gray", bg="white")
+        name_player_label.pack(pady=10)
+
     def end_game():
+        global btn_restart, btn_save_score
+
         if not check_collision():
             move_snake()
             if check_food_collision():
@@ -106,10 +164,14 @@ def game():
         else:
             canvas.create_text(WIDTH / 2, HEIGHT / 2, text="Game Over", fill="red", font=("Arial", 24))
             canvas.create_text(WIDTH / 2, HEIGHT / 1.5, text="Score: " + str(score), fill="blue", font=("Arial", 24))
-            btn_restart = tk.Button(root, bg="green", fg="white", text="Restart", font=("Arial, 15"), cursor="hand2", command=restart_game)
-            btn_restart.pack()
-            canvas.delete(food)
 
+            btn_restart = tk.Button(root, bg="green", fg="white", text="Restart", font=("Arial, 15"), cursor="hand2", command=restart_game)
+            btn_restart.pack(side=tk.LEFT, padx=10, pady=10)
+
+            btn_save_score = tk.Button(root, bg="blue", fg="white", text="Sauvegardé le Score", font=("Arial, 15"), cursor="hand2",command=entry_name)
+            btn_save_score.pack(side=tk.RIGHT, padx=10, pady=10)
+
+            canvas.delete(food)
 
     def press_key(event):
         change_direction(event.keysym)
