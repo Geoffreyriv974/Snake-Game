@@ -15,7 +15,6 @@ connection = mysql.connector.connect(
     database='score'
 )
 
-
 def save_score():
     root.destroy()
 
