@@ -1,5 +1,5 @@
 services:
-  mysql:
+  mariadb:
     image: mariadb:11.5.2
     environment:
       MYSQL_ROOT_PASSWORD: root
@@ -9,15 +9,15 @@ services:
   phpmyadmin:
     image: phpmyadmin:5.2.1
     ports:
-      - 3306:80
+      - 8080:80
     environment:
-      PMA_HOST: mysql
+      PMA_HOST: mariadb
     depends_on:
-      - mysql
+      - mariadb
 
   snack-game:
     build: .
     ports:
       - 8000:80
     depends_on:
-      - mysql
+      - mariadb
