@@ -1,19 +1,12 @@
 import tkinter as tk
 import random
 import mysql.connector
+from PIL import Image, ImageTk
 
 WIDTH = 500
 HEIGHT = 500
 PIECE_SIZE = 20
 BASE_SNAKE_LENGTH = 2
-
-connection = mysql.connector.connect(
-    host="localhost",
-    port=3306,
-    user='root',
-    password='root',
-    database='score'
-)
 
 def save_score():
     root.destroy()
@@ -77,7 +70,7 @@ def game():
             canvas.delete(food)
         x = random.randint(0, (WIDTH - PIECE_SIZE) // PIECE_SIZE) * PIECE_SIZE
         y = random.randint(0, (HEIGHT - PIECE_SIZE) // PIECE_SIZE) * PIECE_SIZE
-        food = canvas.create_oval(x, y, x + PIECE_SIZE, y + PIECE_SIZE, fill="red")
+        food = canvas.create_image(x, y, image=pomme)
 
     def check_food_collision():
         if canvas.coords(snake_piece[0]) == canvas.coords(food):
@@ -122,9 +115,6 @@ def game():
 
             name_player_get = name_player.get()
 
-            btn_save_score = tk.Button(root, bg="blue", fg="white", text="Sauvegardé", font=("Arial, 15"),cursor="hand2", command=save_score)
-            btn_save_score.pack()
-
             btn_valid_entry.destroy()
             name_player.destroy()
 
@@ -132,13 +122,19 @@ def game():
             appel_score.set(score)
             appel_score_get = str(appel_score.get())
 
-            display_score = tk.Label(root, text="Ton Score :", bg="white", fg="black", font=("yellowstone", 20))
+            frame_score = tk.Frame(root)
+            frame_score.pack()
+
+            display_score = tk.Label(frame_score, text="Ton Score :", bg="white", fg="black", font=("yellowstone", 20))
             display_score.pack(side=tk.LEFT)
 
-            display_score_number = tk.Label(root, text=appel_score_get, bg="white", fg="black",font=("yellowstone", 20))
+            display_score_number = tk.Label(frame_score, text=appel_score_get, bg="white", fg="black",font=("yellowstone", 20))
             display_score_number.pack(side=tk.RIGHT)
 
             new_score = display_score_number.cget("text")
+
+            btn_save_score = tk.Button(root, bg="blue", fg="white", text="Sauvegardé", font=("Arial, 15"), cursor="hand2", command=save_score)
+            btn_save_score.pack(pady=10)
 
         name_player = tk.Entry(root, font=("yellowstone", 20), borderwidth=4, fg="gray", bg="white")
         name_player.pack(pady=10)
@@ -178,7 +174,14 @@ def game():
     root = tk.Tk()
     root.title("Snake")
 
+    # création image
+    image_pommes = Image.open("image/pomme.png")
+    image_pommes = image_pommes.resize((PIECE_SIZE, PIECE_SIZE))
+
+    pomme = ImageTk.PhotoImage(image_pommes)
+
     canvas = tk.Canvas(root, width=WIDTH, height=HEIGHT, bg="black")
+    canvas.image = pomme
     canvas.pack()
 
     create_snake()
