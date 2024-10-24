@@ -17,14 +17,4 @@ def choice_mode():
     Label_mode = tk.Label(mode, fg="blue", text='Choice mode', font=('Arial', 20))
     Label_mode.pack(ipady=5)
 
-    image_pomme = Image.open("image/pomme.png")
-
-    pomme = ImageTk.PhotoImage(image_pomme)
-
-    btn_start = tk.Button(mode, command=start_game, cursor="hand2", image=pomme)
-    btn_start.pack(side=tk.LEFT, padx=50)
-
-    btn_score = tk.Button(mode, text="SCORE", font=("Arial", 24), cursor="hand2", borderwidth=10)
-    btn_score.pack(side=tk.RIGHT, padx=50)
-
     mode.mainloop()
