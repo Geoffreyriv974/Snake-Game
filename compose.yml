@@ -1,0 +1,20 @@
+services:
+  phpmyadmin:
+    image: phpmyadmin:5.2.1
+    ports:
+      - 8001:80
+    environment:
+      PMA_HOST: mariadb
+      PMA_USER: root
+      PMA_PASSWORD: root
+      PMA_ARBITRARY: 1
+
+  mariadb:
+    image: mariadb:11.4.3
+    ports:
+      - 3306:3306
+    environment:
+      MARIADB_ROOT_PASSWORD: root
+      MARIADB_DATABASE: snake-game
+    volumes:
+      - ./mysql-data:/var/lib/mysql
