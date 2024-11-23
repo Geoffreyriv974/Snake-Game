@@ -1,30 +1,31 @@
 import tkinter as tk
-from game import *
-from score import *
-from mode import *
+from basic_mode import *
+from fast_mode import *
+from double_mode import *
+
+def stop_game():
+    menu.destroy()
+
+def start_basic_mode():
+    basic_game()
+
+def start_fast_mode():
+    fast_game()
+
+def start_dooble_mode():
+    double_game()
 
 def main():
-
-    def select_mode():
-        game()
-
-    def stop_game():
-        menu.destroy()
-
-    def on_enter(event, label):
-        label.config(fg="#B8860B")
-
-    def on_leave(event, label):
-        label.config(fg="yellow")
+    global menu
 
     menu = tk.Tk()
-    menu.title('Menu Snake Games')
+    menu.title('Menu Snake Game')
     menu.attributes('-fullscreen', True)
     menu.resizable(False, False)
     menu.config(bg="green")
 
     game_title = tk.Label(menu, fg="yellow", bg="green", text='Snake-Games', font=('Press Start 2P', 40))
-    game_title.pack(ipady=50)
+    game_title.pack(ipady=70)
 
     frame_score = tk.Frame(menu, bg="green")
     frame_score.pack(ipady=50)
@@ -37,16 +38,19 @@ def main():
     basic_mode.pack()
     basic_mode.bind("<Enter>", lambda event, label=basic_mode: on_enter(event, label))
     basic_mode.bind("<Leave>", lambda event, label=basic_mode: on_leave(event, label))
+    basic_mode.bind("<Button-1>", lambda event: start_basic_mode())
 
     fast_mode = tk.Label(menu, fg="yellow", bg="green", text='Fast mode', font=('Press Start 2P', 25), cursor='hand2')
     fast_mode.pack()
     fast_mode.bind("<Enter>", lambda event, label=fast_mode: on_enter(event, label))
     fast_mode.bind("<Leave>", lambda event, label=fast_mode: on_leave(event, label))
+    fast_mode.bind("<Button-1>", lambda event: start_fast_mode())
 
-    express_mode = tk.Label(menu, fg="yellow", bg="green", text='Express mode', font=('Press Start 2P', 25), cursor='hand2')
-    express_mode.pack()
-    express_mode.bind("<Enter>", lambda event, label=express_mode: on_enter(event, label))
-    express_mode.bind("<Leave>", lambda event, label=express_mode: on_leave(event, label))
+    dooble_mode = tk.Label(menu, fg="yellow", bg="green", text='Double mode', font=('Press Start 2P', 25), cursor='hand2')
+    dooble_mode.pack()
+    dooble_mode.bind("<Enter>", lambda event, label=dooble_mode: on_enter(event, label))
+    dooble_mode.bind("<Leave>", lambda event, label=dooble_mode: on_leave(event, label))
+    dooble_mode.bind("<Button-1>", lambda event: start_dooble_mode())
 
     quit_game = tk.Label(menu, fg="yellow", bg="green", text='Quit', font=('Press Start 2P', 25), cursor='hand2')
     quit_game.pack()
